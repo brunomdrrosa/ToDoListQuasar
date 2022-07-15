@@ -1,27 +1,14 @@
 <template>
   <q-page padding>
-    <button style="position: absolute; right: 10px" @click="contador++">
-      {{ contador }}
-    </button>
-    <input
-      v-model="mensagem"
-      @keyup.esc="limparMensagem"
-      @keyup.enter="alerta"
-      autofocus
-      :class="{ erro: mensagem.length > 22 }"
-      ref="mensagemInput"
-    />
-    <button @click="limparMensagem">Limpar</button>
-
-    <div>{{ mensagem.length }}</div>
-
-    <h5 v-if="mensagem.length" class="bordaCinza">{{ mensagem }}</h5>
-    <h6 v-else>Nenhuma mensagem foi enviada</h6>
-
-    <hr />
-
-    <p>Mensagem em maiúsculo: {{ mensagemMaiusculo }}</p>
-    <p>Mensagem em minúsculo: {{ mensagemMinusculo }}</p>
+    <ul>
+      <tarefa
+        v-for="(tarefa, index) in tarefas"
+        :key="id"
+        :tarefa="tarefa"
+        :index="index"
+        >{{ tarefa.nome }}</tarefa
+      >
+    </ul>
   </q-page>
 </template>
 
@@ -29,54 +16,37 @@
 export default {
   data() {
     return {
-      mensagem: "Eu amo o Vue.js!",
-      contador: 0,
+      tarefas: [
+        {
+          id: 1,
+          nome: "Terminar os filmes da minha lista",
+          prazo: "31/07/2022",
+          horario: "23:59",
+        },
+        {
+          id: 2,
+          nome: "Ler um livro",
+          prazo: "28/07/2022",
+          horario: "12:30",
+        },
+        {
+          id: 3,
+          nome: "Arrumar as malas para viajar",
+          prazo: "15/07/2022",
+          horario: "23:59",
+        },
+      ],
     };
   },
-  computed: {
-    mensagemMaiusculo() {
-      console.log("mensagemMaiusculo foi acionada");
-      return this.mensagem.toUpperCase();
-    },
-    mensagemMinusculo() {
-      return this.mensagem.toLowerCase();
-    },
-    estiloErro() {
-      if (this.mensagem.length > 22) {
-        return {
-          color: "red",
-          background: "pink",
-        };
-      }
-    },
-  },
   methods: {
-    limparMensagem() {
-      this.mensagem = "";
-    },
-    alerta() {
-      alert(this.mensagem);
+    deletarTarefa(index) {
+      this.tarefas.splice(index, 1);
     },
   },
-  mounted() {
-    console.log(this.$refs);
-    this.$refs.mensagemInput.className = "bg-green";
+  components: {
+    tarefa: require("components/Tarefa.vue").default,
   },
 };
 </script>
 
-<style>
-.bordaCinza {
-  border: 1px solid grey;
-}
-
-input,
-button {
-  font-size: 22px;
-}
-
-.erro {
-  color: red;
-  background: pink;
-}
-</style>
+<style></style>
